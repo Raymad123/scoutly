@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Scout AI</title>
+
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #1e6bd6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1553aa;
+    }
+
+    .answer {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f0f4ff;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+
+    .loading {
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>⚜️ Scout AI</h1>
+
+    <input
+      id="question"
+      placeholder="Ask a Scout-related question..."
+    />
+
+    <button onclick="askScout()">Ask</button>
+
+    <div id="answer" class="answer"></div>
+  </div>
+
+  <script>
+    async function askScout() {
+      const question = document.getElementById("question").value.trim();
+      const answerBox = document.getElementById("answer");
+
+      if (!question) {
+        answerBox.innerText = "Please enter a question.";
+        return;
+      }
+
+      answerBox.innerText = "Thinking...";
+      answerBox.classList.add("loading");
+
+      try {
+        const response = await fetch(
+          "https://YOUR-APP.onrender.com/ask",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question })
+          }
+        );
+
+        const data = await response.json();
+        answerBox.innerText = data.answer;
+      } catch (err) {
+        answerBox.innerText = "Error connecting to Scout AI.";
+      }
+
+      answerBox.classList.remove("loading");
+    }
+  </script>
+</body>
+</html>

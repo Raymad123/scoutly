@@ -66,12 +66,30 @@ If web info is weak, rely on general scouting knowledge.
     return response.choices[0].message.content.strip()
 
 # ----- API Endpoint -----
-@app.post("/ask")
-def ask_scout_ai(req: QuestionRequest):
-    web_info = web_search(req.question)
-    answer = ai_answer(req.question, web_info)
+from fastapi import FastAPI
+from pydantic import BaseModel
+import os
 
-    return {
-        "question": req.question,
-        "answer": answer
-    }
+app = FastAPI(title="Scoutly AI API")
+
+class Question(BaseModel):
+    question: str
+
+@app.post("/ask")
+def ask_ai(data: Question):
+    try:
+        # TEMPORARY SAFE RESPONSE (no OpenAI)
+        return {
+            "answer": (
+                "I’m currently running in offline mode. "
+                "Here’s a general Scout-related answer:\n\n"
+                "The Scout Law is a set of principles that guide a Scout’s behavior, "
+                "including being trustworthy, loyal, helpful, friendly, courteous, "
+                "kind, obedient, cheerful, thrifty, brave, clean, and reverent."
+            )
+        }
+
+    except Exception as e:
+        return {
+            "answer": "Sorry — something went wrong, but the server is still running."
+        }
